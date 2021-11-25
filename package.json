@@ -1,0 +1,19 @@
+{
+  "name": "mixpanel-destination",
+  "version": "0.0.1",
+  "description": "Mixpanel Destination for Jitsu (https://jitsu.com)",
+  "main": "dist/mixpanel-destination.js",
+  "repository": "git@github.com:jitsucom/mixpanel-destination.git",
+  "author": "Ildar Nurislamov <ildar@jitsu.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "jitsu destination build"
+  },
+  "dependencies": {
+    "@jitsu/jitsu-cli": "^0.0.2",
+    "@jitsu/jitsu-types": "^0.0.2",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.2"
+  }
+}
