@@ -7,7 +7,6 @@ const descriptor: DestinationDescriptor = {
     type: "mixpanel",
     displayName: "Mixpanel",
     icon: "",
-    defaultTransform: "return toMixpanel($, context, {userProfileUpdates: {}, additionalProperties: {}, overriddenEventName: ''})",
     description: "Jitsu can send events from JS SDK or Events API to Mixpanel Ingestion API filling as much Mixpanel Events " +
         "Properties as possible from original event data.",
     configurationParameters: [

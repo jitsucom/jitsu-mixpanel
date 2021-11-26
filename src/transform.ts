@@ -1,16 +1,8 @@
-import {DestinationContext, DestinationMessage} from "@jitsu/jitsu-types/src/destination";
+import {DestinationMessage, JitsuContext} from "@jitsu/jitsu-types/src/destination";
 import {JitsuEvent} from "@jitsu/jitsu-types/src/event";
 
-export default function TransformFunction(
-    $: JitsuEvent,
-    dstContext: DestinationContext,
-    {
-        userProfileUpdates = {} as any,
-        additionalProperties = {} as any,
-        overriddenEventName = "",
-    } = {}
-): DestinationMessage[] | DestinationMessage | null {
-    const context = $.eventn_ctx || $;
+export default function TransformFunction(event: JitsuEvent, dstContext: JitsuContext) {
+    const context = event.eventn_ctx || event;
     const user = context.user || {};
     const utm = context.utm || {};
     const location = context.location || {};
@@ -40,7 +32,7 @@ export default function TransformFunction(
         }
     }
 
-    const eventType = getEventType($);
+    const eventType = getEventType(event);
 
     let envelops:DestinationMessage[] = [];
     let $set = {};
@@ -110,11 +102,11 @@ export default function TransformFunction(
                     "data=" +
                     encodeURIComponent(
                         JSON.stringify({
-                            event: overriddenEventName || eventType,
+                            event: eventType,
                             properties: {
                                 token: dstContext.token,
-                                time: new Date($._timestamp).getTime(),
-                                $insert_id: $.eventn_ctx_event_id || context.event_id,
+                                time: new Date(event._timestamp).getTime(),
+                                $insert_id: event.eventn_ctx_event_id || context.event_id,
                                 $current_url: context.url,
                                 $referrer: context.referer,
                                 $referring_domain: refDomain,
@@ -131,7 +123,7 @@ export default function TransformFunction(
                                     user.anonymous_id ||
                                     user.hashed_anonymous_id,
                                 $email: user.email,
-                                ip: $.source_ip,
+                                ip: event.source_ip,
                                 $browser: ua.ua_family,
                                 $browser_version: ua.ua_version,
                                 $os: ua.os_family,
@@ -146,8 +138,7 @@ export default function TransformFunction(
                                 utm_campaign: utm.campaign,
                                 utm_content: utm.content,
                                 utm_term: utm.term,
-                                Revenue: conversion.revenue || $.revenue,
-                                ...additionalProperties,
+                                Revenue: conversion.revenue || event.revenue
                             },
                         })
                     ),
@@ -155,13 +146,13 @@ export default function TransformFunction(
 
         if (mustUpdateUserProfile) {
             $set = {
-                [`Last ${overriddenEventName || eventType}`]: $._timestamp,
+                [`Last ${eventType}`]: event._timestamp,
             };
             $add = {
-                [overriddenEventName || eventType]: 1,
+                [eventType]: 1,
             };
-            if (conversion.revenue || $.revenue) {
-                $add["Lifetime Revenue"] = conversion.revenue || $.revenue;
+            if (conversion.revenue || event.revenue) {
+                $add["Lifetime Revenue"] = conversion.revenue || event.revenue;
             }
         }
     }
@@ -169,11 +160,10 @@ export default function TransformFunction(
     if (mustUpdateUserProfile) {
         //Set User Profile Properties
 
-        userProfileUpdates = {
-            ...userProfileUpdates,
-            $set: {...$set, ...userProfileUpdates?.$set},
-            $set_once: {...$set_once, ...userProfileUpdates?.$set_once},
-            $add: {...$add, ...userProfileUpdates?.$add},
+        let userProfileUpdates = {
+            $set,
+            $set_once,
+            $add,
         };
 
         //Make a separate API request for engageObject properties.
@@ -190,7 +180,7 @@ export default function TransformFunction(
                         user.email ||
                         user.anonymous_id ||
                         user.hashed_anonymous_id,
-                    $ip: $.source_ip,
+                    $ip: event.source_ip,
                     [key]: engage,
                 });
             }

@@ -531,10 +531,10 @@
   dependencies:
     "@types/jest" "^27.0.3"
 
-"@jitsu/jitsu-types@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@jitsu/jitsu-types/-/jitsu-types-0.0.2.tgz#c29c7d489cabf7525bd71735298760fbe9b0e8e2"
-  integrity sha512-io0sFiRpwJKYwlm3zUG5MsmYx1sFO9SwixTJJZetIkqCh0yl5DNvn3qfCRbT6Aec2MRNA5EnYcalNd+NUCeKWQ==
+"@jitsu/jitsu-types@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@jitsu/jitsu-types/-/jitsu-types-0.0.3.tgz#40f98b1b897fc3f203ce974737891e0af12f1af8"
+  integrity sha512-LaDhgO7PhjrmrZMXnal6jyLqiJHZ8vNqO5yLswp2xeD0z2W2Um0qTUdhtzfw/qKHkXfbr7SCPEBHgahd1cljqw==
   dependencies:
     "@types/jest" "^27.0.3"
 
