@@ -499,10 +499,10 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@jitsu/jitsu-cli@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@jitsu/jitsu-cli/-/jitsu-cli-0.0.2.tgz#747f77cc705e9a2c53d77879502ce80282e763f0"
-  integrity sha512-tSzTx51y0aOtO+vOhsNu7FcYbRcdV+sLfo+6bdoa7SwaXhjbhVzS/wvlrh3JxvtYnNTlpnRQE/TlOZKscTbsRQ==
+"@jitsu/jitsu-cli@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@jitsu/jitsu-cli/-/jitsu-cli-0.0.4.tgz#b1ad705179ac24ca5064e261eec65838f6e133fc"
+  integrity sha512-r//IjPgVWTQj94Cyv2LfCE9Ealkvpa340EqiZJOwRJOhm81huaV5F+xw+gCR2PtzGyDSsbr/BboQnmmxk/guFQ==
   dependencies:
     "@jitsu/jitsu-types" "^0.0.1"
     "@rollup/plugin-commonjs" "^21.0.1"
