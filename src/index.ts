@@ -1,7 +1,7 @@
 import {DestinationAdapter, DestinationDescriptor} from "@jitsu/jitsu-types/src/destination";
-import TransformFunction from "./transform";
+import jitsuMixpanel from "./jitsu-mixpanel";
 
-const adapter: DestinationAdapter = TransformFunction
+const adapter: DestinationAdapter = jitsuMixpanel
 
 const descriptor: DestinationDescriptor = {
     type: "mixpanel",

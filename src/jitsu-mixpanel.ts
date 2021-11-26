@@ -1,7 +1,7 @@
 import {DestinationMessage, JitsuContext} from "@jitsu/jitsu-types/src/destination";
 import {JitsuEvent} from "@jitsu/jitsu-types/src/event";
 
-export default function TransformFunction(event: JitsuEvent, dstContext: JitsuContext) {
+export default function jitsuMixpanel(event: JitsuEvent, dstContext: JitsuContext) {
     const context = event.eventn_ctx || event;
     const user = context.user || {};
     const utm = context.utm || {};
