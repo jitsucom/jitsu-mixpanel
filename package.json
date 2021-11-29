@@ -1,6 +1,6 @@
 {
   "name": "mixpanel-destination",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Mixpanel Destination for Jitsu (https://jitsu.com)",
   "main": "dist/mixpanel-destination.js",
   "repository": "git@github.com:jitsucom/mixpanel-destination.git",
