@@ -6,7 +6,7 @@
   "repository": "git@github.com:jitsucom/mixpanel-destination.git",
   "author": "Ildar Nurislamov <ildar@jitsu.com>",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "scripts": {
     "build": "jitsu destination build",
     "test": "jitsu destination test"
