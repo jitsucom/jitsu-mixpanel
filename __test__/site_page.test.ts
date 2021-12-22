@@ -1,15 +1,18 @@
-import {DestinationContext, testDestination} from "@jitsu/jitsu-types";
-import {adapter} from "../src";
+import {destination} from "../src";
+import {testDestination} from "@jitsu/cli/lib/tests";
+import {JitsuDestinationContext} from "@jitsu/types/extension";
 
 /**
  * Represents context data of configured destination instance
  */
-const testContext: DestinationContext = {
+const testContext: JitsuDestinationContext = {
     destinationId: "abc123",
     destinationType: "mixpanel",
-    token: "123",
-    users_enabled: true,
-    anonymous_users_enabled: true
+    config: {
+        token: "123",
+        users_enabled: true,
+        anonymous_users_enabled: true
+    },
 }
 
 const date = new Date()
@@ -19,7 +22,7 @@ const epoch = date.getTime()
 testDestination({
         name: "site_page",
         context: testContext,
-        transform: ($, context) => adapter($, context),
+        destination: destination,
         event: {
             _timestamp: isoDate,
             event_type: "site_page",
@@ -30,7 +33,7 @@ testDestination({
                     {
                         "event": "Page View",
                         "properties": {
-                            "token": testContext.token,
+                            "token": testContext.config.token,
                             "time": epoch
                         }
                     }
@@ -45,7 +48,7 @@ testDestination({
 testDestination({
         name: "with user",
         context: testContext,
-        transform: ($, context) => adapter($, context),
+        destination: destination,
         event: {
             _timestamp: isoDate,
             event_type: "Page View",
@@ -60,7 +63,7 @@ testDestination({
                     {
                         "event": "Page View",
                         "properties": {
-                            "token": testContext.token,
+                            "token": testContext.config.token,
                             "time": epoch,
                             "$identified_id": "support@jitsu.com",
                             "$anon_id": "1234567",
@@ -77,13 +80,13 @@ testDestination({
             {
                 "body": "data=" + encodeURIComponent(JSON.stringify(
                     [{
-                        "$token": testContext.token,
+                        "$token": testContext.config.token,
                         "$distinct_id": "support@jitsu.com",
                         "$set": {
                             "Last Page View": isoDate
                         }
                     }, {
-                        "$token": testContext.token,
+                        "$token": testContext.config.token,
                         "$distinct_id": "support@jitsu.com",
                         "$add": {
                             "Page View": 1

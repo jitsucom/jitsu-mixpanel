@@ -1,10 +1,15 @@
-import {DestinationAdapter, DestinationDescriptor} from "@jitsu/jitsu-types/src/destination";
-import jitsuMixpanel from "./jitsu-mixpanel";
+import {jitsuMixpanel, MixpanelDestinationConfig} from "./jitsu-mixpanel";
+import {ConfigValidator, DestinationFunction, ExtensionDescriptor} from "@jitsu/types/extension";
 
-const adapter: DestinationAdapter = jitsuMixpanel
+const destination: DestinationFunction = jitsuMixpanel
 
-const descriptor: DestinationDescriptor = {
-    type: "mixpanel",
+const validator: ConfigValidator<MixpanelDestinationConfig> = async (config: MixpanelDestinationConfig) => {
+    //TODO: implement once mixpanel API will be clear
+    return true;
+}
+
+const descriptor: ExtensionDescriptor<MixpanelDestinationConfig> = {
+    id: "jitsu-mixpanel-destination",
     displayName: "Mixpanel",
     icon: "",
     description: "Jitsu can send events from JS SDK or Events API to Mixpanel Ingestion API filling as much Mixpanel Events " +
@@ -40,7 +45,7 @@ const descriptor: DestinationDescriptor = {
 }
 
 
-export {descriptor, adapter}
+export {descriptor, destination, validator}
 
 
 

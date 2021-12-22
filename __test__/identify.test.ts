@@ -1,15 +1,18 @@
-import {DestinationContext, testDestination} from "@jitsu/jitsu-types";
-import {adapter} from "../src";
+import {destination} from "../src";
+import {JitsuDestinationContext} from "@jitsu/types/extension";
+import {testDestination} from "@jitsu/cli/lib/tests";
 
 /**
  * Represents context data of configured destination instance
  */
-const testContext: DestinationContext = {
+const testContext: JitsuDestinationContext = {
     destinationId: "abc123",
     destinationType: "mixpanel",
-    token: "123",
-    users_enabled: true,
-    anonymous_users_enabled: true
+    config: {
+        token: "123",
+        users_enabled: true,
+        anonymous_users_enabled: true
+    },
 }
 
 const date = new Date()
@@ -19,7 +22,7 @@ const epoch = date.getTime()
 testDestination({
         name: "identify",
         context: testContext,
-        transform: ($, context) => adapter($, context),
+        destination: destination,
         event: {
             _timestamp: isoDate,
             event_type: "identify",
@@ -36,7 +39,7 @@ testDestination({
                         "properties": {
                             "alias": "1234567",
                             "distinct_id": "support@jitsu.com",
-                            "token": testContext.token
+                            "token": testContext.config.token
                         }
                     }
                 )),
@@ -47,13 +50,13 @@ testDestination({
             {
                 "body": "data=" + encodeURIComponent(JSON.stringify(
                     [{
-                        "$token": testContext.token,
+                        "$token": testContext.config.token,
                         "$distinct_id": "support@jitsu.com",
                         "$set": {
                             "$email": "support@jitsu.com"
                         }
                     }, {
-                        "$token": testContext.token,
+                        "$token": testContext.config.token,
                         "$distinct_id": "support@jitsu.com",
                         "$set_once": {
                             "$initial_referrer": "$direct",

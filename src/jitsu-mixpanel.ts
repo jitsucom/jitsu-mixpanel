@@ -1,7 +1,17 @@
-import {DestinationMessage, JitsuContext} from "@jitsu/jitsu-types/src/destination";
-import {JitsuEvent} from "@jitsu/jitsu-types/src/event";
+import {DefaultJitsuEvent} from "@jitsu/types/event";
+import {DestinationFunction, DestinationMessage, JitsuDestinationContext} from "@jitsu/types/extension";
 
-export default function jitsuMixpanel(event: JitsuEvent, dstContext: JitsuContext) {
+export type MixpanelDestinationConfig = {
+    anonymous_users_enabled: boolean,
+    users_enabled: boolean
+    token: string
+}
+
+function getProp(dstContext: JitsuDestinationContext, prop: string) {
+    return dstContext?.config[prop] || dstContext[prop];
+}
+
+export const jitsuMixpanel: DestinationFunction<DefaultJitsuEvent, MixpanelDestinationConfig> =  (event: DefaultJitsuEvent, dstContext: JitsuDestinationContext) => {
     const context = event.eventn_ctx || event;
     const user = context.user || {};
     const utm = context.utm || {};
@@ -15,8 +25,8 @@ export default function jitsuMixpanel(event: JitsuEvent, dstContext: JitsuContex
     const refDomain = matches && matches[1]; // domain will be null if no match is found
 
     const mustUpdateUserProfile =
-        dstContext.users_enabled &&
-        (user.internal_id || user.email || (dstContext.anonymous_users_enabled && (user.anonymous_id || user.hashed_anonymous_id)));
+        getProp(dstContext, 'users_enabled') &&
+        (user.internal_id || user.email || (getProp(dstContext, 'anonymous_users_enabled') && (user.anonymous_id || user.hashed_anonymous_id)));
 
     function getEventType($) {
         switch ($.event_type) {
@@ -60,7 +70,7 @@ export default function jitsuMixpanel(event: JitsuEvent, dstContext: JitsuContex
                                 properties: {
                                     alias: user.anonymous_id || user.hashed_anonymous_id,
                                     distinct_id: user.internal_id || user.email,
-                                    token: dstContext.token,
+                                    token: getProp(dstContext, 'token'),
                                 },
                             })
                         ),
@@ -104,7 +114,7 @@ export default function jitsuMixpanel(event: JitsuEvent, dstContext: JitsuContex
                         JSON.stringify({
                             event: eventType,
                             properties: {
-                                token: dstContext.token,
+                                token: getProp(dstContext, 'token'),
                                 time: new Date(event._timestamp).getTime(),
                                 $insert_id: event.eventn_ctx_event_id || context.event_id,
                                 $current_url: context.url,
@@ -174,7 +184,7 @@ export default function jitsuMixpanel(event: JitsuEvent, dstContext: JitsuContex
 
             if (Object.keys(engage).length > 0) {
                 engages.push({
-                    $token: dstContext.token,
+                    $token: getProp(dstContext, 'token'),
                     $distinct_id:
                         user.internal_id ||
                         user.email ||
