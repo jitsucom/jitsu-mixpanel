@@ -20,10 +20,17 @@ Run tests
 yarn test
 ```
 
-
-
-
 If everything is ok - resulted destination file location
 ```shell
 ./dist/mixpanel-destination.js
+```
+
+Validate destination config:
+with json string:
+```shell
+yarn validate-config -j '{"api_secret": "abc","token": "def", "project_id": "123"}'
+```
+with json file:
+```shell
+yarn validate-config -f config.json
 ```

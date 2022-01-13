@@ -11,7 +11,7 @@ const validator: ConfigValidator<MixpanelDestinationConfig> = async (config: Mix
             project_token: config.token
         })
     }).then(response => {
-        if (response.ok) {
+        if (response.headers?.get('Content-Type') === "application/json") {
             return response.json()
         } else {
             return response.text().then(t => `Error Code: ${response.status} msg: ${t}`)
