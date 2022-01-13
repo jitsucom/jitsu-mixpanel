@@ -11,7 +11,9 @@ const testContext: JitsuDestinationContext = {
     config: {
         token: "123",
         users_enabled: true,
-        anonymous_users_enabled: true
+        anonymous_users_enabled: true,
+        api_secret: "123",
+        project_id: "999"
     },
 }
 
@@ -29,18 +31,19 @@ testDestination({
         },
         expectedResult: [
             {
-                "body": "data=" + encodeURIComponent(JSON.stringify(
-                    {
+                "body": JSON.stringify([{
                         "event": "Page View",
                         "properties": {
-                            "token": testContext.config.token,
                             "time": epoch
                         }
-                    }
-                )),
-                "headers": {"Content-Type": "application/x-www-form-urlencoded"},
+                    }]
+                ),
+                "headers": {
+                    "Content-Type": "application/json",
+                    "Authorization": "Basic MTIzOg=="
+                },
                 "method": "POST",
-                "url": "https://api.mixpanel.com/track"
+                "url": "https://api.mixpanel.com/import?project_id=999"
             }]
     }
 )
@@ -59,11 +62,10 @@ testDestination({
         },
         expectedResult: [
             {
-                "body": "data=" + encodeURIComponent(JSON.stringify(
-                    {
+                "body": JSON.stringify(
+                    [{
                         "event": "Page View",
                         "properties": {
-                            "token": testContext.config.token,
                             "time": epoch,
                             "$identified_id": "support@jitsu.com",
                             "$anon_id": "1234567",
@@ -71,11 +73,13 @@ testDestination({
                             "distinct_id": "support@jitsu.com",
                             "$email": "support@jitsu.com"
                         }
-                    }
-                )),
-                "headers": {"Content-Type": "application/x-www-form-urlencoded"},
+                    }]
+                ),
+                "headers": {"Content-Type": "application/json",
+                    "Authorization": "Basic MTIzOg=="
+                },
                 "method": "POST",
-                "url": "https://api.mixpanel.com/track"
+                "url": "https://api.mixpanel.com/import?project_id=999"
             },
             {
                 "body": "data=" + encodeURIComponent(JSON.stringify(

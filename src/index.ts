@@ -4,8 +4,33 @@ import {ConfigValidator, DestinationFunction, ExtensionDescriptor} from "@jitsu/
 const destination: DestinationFunction = jitsuMixpanel
 
 const validator: ConfigValidator<MixpanelDestinationConfig> = async (config: MixpanelDestinationConfig) => {
-    //TODO: implement once mixpanel API will be clear
-    return true;
+    let res = await fetch(`https://mixpanel.com/api/app/validate-project-credentials/`, {
+        method: 'post',
+        body: JSON.stringify({
+            api_secret: config.api_secret,
+            project_token: config.token
+        })
+    }).then(response => {
+        if (response.ok) {
+            return response.json()
+        } else {
+            return response.text().then(t => `Error Code: ${response.status} msg: ${t}`)
+        }
+    })
+        .then(result => {
+            if (typeof result === 'string') {
+                return { ok: false, message: result }
+            }
+            else if (result["status"] === "ok") {
+                return { ok: true, message: JSON.stringify(result["results"]) }
+            } else {
+                return { ok: false, message: result["error"]}
+            }
+        })
+        .catch(error => {
+            return { ok: false, message: 'Error: ' + error.toString() }
+        });
+    return res;
 }
 
 const descriptor: ExtensionDescriptor<MixpanelDestinationConfig> = {

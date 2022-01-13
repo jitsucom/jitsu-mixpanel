@@ -1,17 +1,19 @@
 import {DefaultJitsuEvent} from "@jitsu/types/event";
 import {DestinationFunction, DestinationMessage, JitsuDestinationContext} from "@jitsu/types/extension";
+import {flatten, removeProps} from "@jitsu/pipeline-helpers";
+
+var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=0,c1=0,c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);let c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
+
 
 export type MixpanelDestinationConfig = {
     anonymous_users_enabled: boolean,
-    users_enabled: boolean
-    token: string
+    users_enabled: boolean,
+    token: string,
+    api_secret: string,
+    project_id: string
 }
 
-function getProp(dstContext: JitsuDestinationContext, prop: string) {
-    return dstContext?.config[prop] || dstContext[prop];
-}
-
-export const jitsuMixpanel: DestinationFunction<DefaultJitsuEvent, MixpanelDestinationConfig> =  (event: DefaultJitsuEvent, dstContext: JitsuDestinationContext) => {
+export const jitsuMixpanel: DestinationFunction<DefaultJitsuEvent, MixpanelDestinationConfig> =  (event: DefaultJitsuEvent, dstContext: JitsuDestinationContext<MixpanelDestinationConfig>) => {
     const context = event.eventn_ctx || event;
     const user = context.user || {};
     const utm = context.utm || {};
@@ -24,9 +26,12 @@ export const jitsuMixpanel: DestinationFunction<DefaultJitsuEvent, MixpanelDesti
     );
     const refDomain = matches && matches[1]; // domain will be null if no match is found
 
+    const config = dstContext.config
+    const Authorization = `Basic ${Base64.encode(config.api_secret + ":")}`
+
     const mustUpdateUserProfile =
-        getProp(dstContext, 'users_enabled') &&
-        (user.internal_id || user.email || (getProp(dstContext, 'anonymous_users_enabled') && (user.anonymous_id || user.hashed_anonymous_id)));
+        config.users_enabled &&
+        (user.id || user.internal_id || user.email || (config.anonymous_users_enabled && (user.anonymous_id || user.hashed_anonymous_id)));
 
     function getEventType($) {
         switch ($.event_type) {
@@ -53,27 +58,23 @@ export const jitsuMixpanel: DestinationFunction<DefaultJitsuEvent, MixpanelDesti
     if (eventType === "$identify") {
         //create an alias user id -> anon id
         if (
-            (user.internal_id || user.email) &&
+            (user.id ||user.internal_id || user.email) &&
             (user.anonymous_id || user.hashed_anonymous_id)
         ) {
             envelops.push({
-                    url: "https://api.mixpanel.com/track",
+                    url: "https://api.mixpanel.com/import?project_id=" + config.project_id,
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
+                        Authorization,
+                        "Content-Type": "application/json",
                     },
-                    body:
-                        "data=" +
-                        encodeURIComponent(
-                            JSON.stringify({
+                    body: JSON.stringify([{
                                 event: "$create_alias",
                                 properties: {
                                     alias: user.anonymous_id || user.hashed_anonymous_id,
-                                    distinct_id: user.internal_id || user.email,
-                                    token: getProp(dstContext, 'token'),
+                                    distinct_id: user.id || user.internal_id || user.email
                                 },
-                            })
-                        ),
+                            }])
                 });
         }
 
@@ -102,33 +103,65 @@ export const jitsuMixpanel: DestinationFunction<DefaultJitsuEvent, MixpanelDesti
         }
     }
     if (eventType !== "$identify") {
+        let additionalProperties = flatten(
+            removeProps(event, [
+                "user",
+                "source_ip",
+                "parsed_ua",
+                "location",
+                "user_language",
+                "user_agent",
+                "doc_path",
+                "referer",
+                "doc_search",
+                "page_title",
+                "url",
+                "event_type",
+                "event_id",
+                "utc_time",
+                "_timestamp",
+                "eventn_ctx_event_id",
+                "utm",
+                "eventn_ctx",
+                "api_key",
+                "app",
+                "doc_encoding",
+                "doc_host",
+                "ids",
+                "local_tz_offset",
+                "screen_resolution",
+                "src",
+                "vp_size",
+                "src_payload",
+                "revenue"
+            ])
+            , {skipArrays: true}
+        )
+
         envelops.push({
-                url: "https://api.mixpanel.com/track",
+                url: "https://api.mixpanel.com/import?project_id=" + config.project_id,
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
+                    Authorization,
+                    "Content-Type": "application/json",
                 },
-                body:
-                    "data=" +
-                    encodeURIComponent(
-                        JSON.stringify({
+                body: JSON.stringify([{
                             event: eventType,
                             properties: {
-                                token: getProp(dstContext, 'token'),
                                 time: new Date(event._timestamp).getTime(),
                                 $insert_id: event.eventn_ctx_event_id || context.event_id,
                                 $current_url: context.url,
                                 $referrer: context.referer,
                                 $referring_domain: refDomain,
-                                $identified_id: user.internal_id || user.email,
+                                $identified_id: user.id || user.internal_id || user.email,
                                 $anon_id: user.anonymous_id || user.hashed_anonymous_id,
                                 $distinct_id:
-                                    user.internal_id ||
+                                    user.id || user.internal_id ||
                                     user.email ||
                                     user.anonymous_id ||
                                     user.hashed_anonymous_id,
                                 distinct_id:
-                                    user.internal_id ||
+                                    user.id || user.internal_id ||
                                     user.email ||
                                     user.anonymous_id ||
                                     user.hashed_anonymous_id,
@@ -148,10 +181,10 @@ export const jitsuMixpanel: DestinationFunction<DefaultJitsuEvent, MixpanelDesti
                                 utm_campaign: utm.campaign,
                                 utm_content: utm.content,
                                 utm_term: utm.term,
-                                Revenue: conversion.revenue || event.revenue
+                                Revenue: conversion.revenue || event.revenue,
+                                ...additionalProperties
                             },
-                        })
-                    ),
+                        }])
             });
 
         if (mustUpdateUserProfile) {
@@ -184,9 +217,9 @@ export const jitsuMixpanel: DestinationFunction<DefaultJitsuEvent, MixpanelDesti
 
             if (Object.keys(engage).length > 0) {
                 engages.push({
-                    $token: getProp(dstContext, 'token'),
+                    $token: config.token,
                     $distinct_id:
-                        user.internal_id ||
+                        user.id || user.internal_id ||
                         user.email ||
                         user.anonymous_id ||
                         user.hashed_anonymous_id,
