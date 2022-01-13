@@ -4,12 +4,16 @@
   "description": "Mixpanel Destination for Jitsu (https://jitsu.com)",
   "main": "dist/mixpanel-destination.js",
   "repository": "git@github.com:jitsucom/mixpanel-destination.git",
-  "author": "Ildar Nurislamov <ildar@jitsu.com>",
+  "author": "Jitsu Dev Team <dev@jitsu.com>",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "private": false,
   "scripts": {
     "build": "jitsu extension build",
-    "test": "jitsu extension test"
+    "test": "jitsu extension test",
+    "validate-config": "jitsu extension validate-config"
   },
   "devDependencies": {
     "@jitsu/cli": "^0.5.1"
