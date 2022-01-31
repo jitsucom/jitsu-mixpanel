@@ -1,6 +1,6 @@
 import {destination} from "../src";
 import {JitsuDestinationContext} from "@jitsu/types/extension";
-import {testDestination} from "@jitsu/cli/lib/tests";
+import {testDestination} from "jitsu-cli/lib/tests";
 import {MixpanelDestinationConfig} from "../src/jitsu-mixpanel";
 
 /**

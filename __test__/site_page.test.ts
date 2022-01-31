@@ -1,5 +1,5 @@
 import {destination} from "../src";
-import {testDestination} from "@jitsu/cli/lib/tests";
+import {testDestination} from "jitsu-cli/lib/tests";
 import {JitsuDestinationContext} from "@jitsu/types/extension";
 
 /**

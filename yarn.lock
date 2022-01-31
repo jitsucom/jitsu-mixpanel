@@ -499,44 +499,15 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@jitsu/cli@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@jitsu/cli/-/cli-0.5.1.tgz#bf22f8e306f68b4260a560a8bddcae1d1045db4f"
-  integrity sha512-ZxlyHNFes8XE7BADlylQ0eLAqrTHqx91ELOWWs8dX2QKxr8xkMabkrKO4amcGBdFSH7jbUEOQQ632yX8sEhkVg==
-  dependencies:
-    "@rollup/plugin-commonjs" "^21.0.1"
-    "@rollup/plugin-multi-entry" "^4.1.0"
-    "@rollup/plugin-node-resolve" "^13.0.6"
-    "@types/prismjs" "^1.16.6"
-    chalk "^4.1.2"
-    commander "^8.3.0"
-    cross-fetch "^3.1.4"
-    inquirer "^8.2.0"
-    jest "^27.3.1"
-    jest-cli "^27.3.1"
-    json5 "^2.2.0"
-    node-fetch "^3.1.0"
-    ora "^6.0.1"
-    prismjs "^1.25.0"
-    rollup "^2.60.0"
-    rollup-plugin-typescript2 "^0.31.0"
-    semver "^7.3.5"
-    terminal-link "^3.0.0"
-    ts-jest "^27.0.7"
-    ts-node "^10.4.0"
-    tslib "^2.3.1"
-    typescript "^4.5.2"
-    validate-npm-package-name "^3.0.0"
+"@jitsu/pipeline-helpers@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@jitsu/pipeline-helpers/-/pipeline-helpers-0.6.0.tgz#800208c33c81686095eaaa1021a20e66672902c5"
+  integrity sha512-1qWsJCaECD+EGXfRfssm/gSmVQxbQCDAFjvoePxP1twO/DraHuIH9IRwM2moYo/SwDEMO8PUYTyJrD2FAHmgDA==
 
-"@jitsu/pipeline-helpers@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@jitsu/pipeline-helpers/-/pipeline-helpers-0.5.1.tgz#77077d5c63b2018dd279cab4d7c4bc4227a5fa52"
-  integrity sha512-pFhhXQ6qzEIVjnVgvloncpUzwU5zWZbOuUNY6HOx11CUfirXPQoTUuJ6Pj6Vieduv42TFJ1NQ8PeDB5As6xMlg==
-
-"@jitsu/types@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@jitsu/types/-/types-0.5.1.tgz#6efbc55572fdbb746f9a69a34e055f5aca46939f"
-  integrity sha512-uZ8kPJCgJjhR984DLl65QkxfHNgnRIJNqkQWLfJqGF8NBZAZp9TMU6rvRS7a3hBeuoApdDBhhRCTTRxcu9sKYw==
+"@jitsu/types@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@jitsu/types/-/types-0.6.0.tgz#ada2c7c8d7f96937af447f6f5185f3c5175f9704"
+  integrity sha512-kUVxoK2nI+jo9DP+9IgYJtByBQ/m9qZ0Cq7DuRQkWyKhxbzHTWWRQbWQKGTUzJriLrGl3V4cedm65hp8VWrf5Q==
 
 "@rollup/plugin-commonjs@^21.0.1":
   version "21.0.1"
@@ -2204,6 +2175,35 @@ jest@^27.3.1:
     "@jest/core" "^27.3.1"
     import-local "^3.0.2"
     jest-cli "^27.3.1"
+
+jitsu-cli@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/jitsu-cli/-/jitsu-cli-0.6.0.tgz#b3546ee652139558d52228fa97c7f9f90214ff0d"
+  integrity sha512-AY+RYKkw5dMkxZepOjFrCxNDDJWWdegD1xMMADPaEZ97u00AYEMuko1uvGNtvHRVePzRJrT2YnomoAJfgHq+Kg==
+  dependencies:
+    "@rollup/plugin-commonjs" "^21.0.1"
+    "@rollup/plugin-multi-entry" "^4.1.0"
+    "@rollup/plugin-node-resolve" "^13.0.6"
+    "@types/prismjs" "^1.16.6"
+    chalk "^4.1.2"
+    commander "^8.3.0"
+    cross-fetch "^3.1.4"
+    inquirer "^8.2.0"
+    jest "^27.3.1"
+    jest-cli "^27.3.1"
+    json5 "^2.2.0"
+    node-fetch "^3.1.0"
+    ora "^6.0.1"
+    prismjs "^1.25.0"
+    rollup "^2.60.0"
+    rollup-plugin-typescript2 "^0.31.0"
+    semver "^7.3.5"
+    terminal-link "^3.0.0"
+    ts-jest "^27.0.7"
+    ts-node "^10.4.0"
+    tslib "^2.3.1"
+    typescript "^4.5.2"
+    validate-npm-package-name "^3.0.0"
 
 js-tokens@^4.0.0:
   version "4.0.0"

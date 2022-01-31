@@ -26,6 +26,7 @@ If everything is ok - resulted destination file location
 ```
 
 Validate destination config:
+
 with json string:
 ```shell
 yarn validate-config -j '{"api_secret": "abc","token": "def", "project_id": "123"}'
