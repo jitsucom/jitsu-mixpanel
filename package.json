@@ -1,6 +1,6 @@
 {
   "name": "jitsu-mixpanel-destination",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Mixpanel Destination for Jitsu (https://jitsu.com)",
   "main": "dist/mixpanel-destination.js",
   "repository": "git@github.com:jitsucom/mixpanel-destination.git",
@@ -11,16 +11,16 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build": "jitsu extension build",
-    "test": "jitsu extension test",
-    "validate-config": "jitsu extension validate-config"
+    "build": "jitsu-cli extension build",
+    "test": "jitsu-cli extension test",
+    "validate-config": "jitsu-cli extension validate-config"
   },
   "devDependencies": {
-    "@jitsu/cli": "^0.5.1"
+    "jitsu-cli": "^0.6.0"
   },
   "dependencies": {
-    "@jitsu/pipeline-helpers": "^0.5.1",
-    "@jitsu/types": "^0.5.1",
+    "@jitsu/pipeline-helpers": "^0.6.0",
+    "@jitsu/types": "^0.6.0",
     "tslib": "^2.3.1",
     "typescript": "^4.5.2"
   }
