@@ -3,34 +3,30 @@ import {ConfigValidator, DestinationFunction, ExtensionDescriptor} from "@jitsu/
 
 const destination: DestinationFunction = jitsuMixpanel
 
-const validator: ConfigValidator<MixpanelDestinationConfig> = async (config: MixpanelDestinationConfig) => {
+const validator: ConfigValidator<MixpanelDestinationConfig> = async (config) => {
+    ['token', 'api_secret', 'project_id'].forEach(prop => {
+        if (config[prop] === undefined) {
+            throw new Error(`Required property '${prop}' is absent in config. Present props: ${Object.keys(config)}`);
+        }
+    })
     let res = await fetch(`https://mixpanel.com/api/app/validate-project-credentials/`, {
         method: 'post',
         body: JSON.stringify({
             api_secret: config.api_secret,
             project_token: config.token
         })
-    }).then(response => {
-        if (response.headers?.get('Content-Type') === "application/json") {
-            return response.json()
+    });
+
+    if (res.headers?.get('Content-Type') === "application/json") {
+        let json = await res.json();
+        if (json.status === 'ok') {
+            return {ok: true}
         } else {
-            return response.text().then(t => `Error Code: ${response.status} msg: ${t}`)
+            return {ok: false, message: json.error}
         }
-    })
-        .then(result => {
-            if (typeof result === 'string') {
-                return { ok: false, message: result }
-            }
-            else if (result["status"] === "ok") {
-                return { ok: true, message: JSON.stringify(result["results"]) }
-            } else {
-                return { ok: false, message: result["error"]}
-            }
-        })
-        .catch(error => {
-            return { ok: false, message: 'Error: ' + error.toString() }
-        });
-    return res;
+    } else {
+        return {ok: false, message: `Error Code: ${res.status} msg: ${await res.text()}`}
+    }
 }
 
 const descriptor: ExtensionDescriptor<MixpanelDestinationConfig> = {

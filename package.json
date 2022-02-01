@@ -13,10 +13,11 @@
   "scripts": {
     "build": "jitsu-cli extension build",
     "test": "jitsu-cli extension test",
+    "execute": "jitsu-cli extension exec",
     "validate-config": "jitsu-cli extension validate-config"
   },
   "devDependencies": {
-    "jitsu-cli": "^0.6.0"
+    "jitsu-cli": "^0.7.0"
   },
   "dependencies": {
     "@jitsu/pipeline-helpers": "^0.6.0",

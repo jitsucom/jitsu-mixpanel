@@ -12,7 +12,7 @@ yarn install
 
 Build destination
 ```shell
-yarn build
+yarn buildy
 ```
 
 Run tests

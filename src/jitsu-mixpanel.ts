@@ -6,12 +6,14 @@ var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456
 
 
 export type MixpanelDestinationConfig = {
-    anonymous_users_enabled: boolean,
-    users_enabled: boolean,
+    anonymous_users_enabled?: boolean,
+    users_enabled?: boolean,
+
     token: string,
     api_secret: string,
     project_id: string
 }
+
 
 export const jitsuMixpanel: DestinationFunction<DefaultJitsuEvent, MixpanelDestinationConfig> =  (event: DefaultJitsuEvent, dstContext: JitsuDestinationContext<MixpanelDestinationConfig>) => {
     const context = event.eventn_ctx || event;

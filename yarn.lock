@@ -2176,10 +2176,10 @@ jest@^27.3.1:
     import-local "^3.0.2"
     jest-cli "^27.3.1"
 
-jitsu-cli@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/jitsu-cli/-/jitsu-cli-0.6.0.tgz#b3546ee652139558d52228fa97c7f9f90214ff0d"
-  integrity sha512-AY+RYKkw5dMkxZepOjFrCxNDDJWWdegD1xMMADPaEZ97u00AYEMuko1uvGNtvHRVePzRJrT2YnomoAJfgHq+Kg==
+jitsu-cli@^0.7.0:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/jitsu-cli/-/jitsu-cli-0.7.1.tgz#298467de1a5aa82a1ce85a363ef505d75574f691"
+  integrity sha512-iKQDihu59zS2mgSMFE3KdcB7Mkn/9ugc/rr7bK63ZqZvYecBw/AEXrK36SglP/bGwvlW8nhRLW7+/WKhTMjt9A==
   dependencies:
     "@rollup/plugin-commonjs" "^21.0.1"
     "@rollup/plugin-multi-entry" "^4.1.0"
