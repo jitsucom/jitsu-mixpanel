@@ -12,7 +12,7 @@ yarn install
 
 Build destination
 ```shell
-yarn buildy
+yarn build
 ```
 
 Run tests
@@ -29,9 +29,9 @@ Validate destination config:
 
 with json string:
 ```shell
-yarn validate-config -j '{"api_secret": "abc","token": "def", "project_id": "123"}'
+yarn validate-config --config-object '{"api_secret": "abc","token": "def", "project_id": "123"}'
 ```
 with json file:
 ```shell
-yarn validate-config -f config.json
+yarn validate-config --config config.json
 ```
