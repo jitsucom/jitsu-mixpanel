@@ -1,5 +1,5 @@
 {
-  "name": "jitsu-mixpanel-destination",
+  "name": "mixpanel-destination",
   "version": "0.2.2",
   "description": "Mixpanel Destination for Jitsu (https://jitsu.com)",
   "main": "dist/mixpanel-destination.js",
